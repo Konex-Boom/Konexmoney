@@ -1,5 +1,6 @@
 package com.example.viewmodel
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,18 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class FinanceViewModel(private val repository: FinanceRepository) : ViewModel() {
+data class UserProfile(
+    val name: String,
+    val phone: String,
+    val email: String,
+    val birthDate: String,
+    val imageUri: String?
+)
+
+class FinanceViewModel(
+    private val repository: FinanceRepository,
+    private val prefs: SharedPreferences
+) : ViewModel() {
 
     // Active screen navigation state
     private val _currentScreen = MutableStateFlow(Screen.Accueil)
@@ -18,6 +30,50 @@ class FinanceViewModel(private val repository: FinanceRepository) : ViewModel() 
 
     fun navigateTo(screen: Screen) {
         _currentScreen.value = screen
+    }
+
+    // User Profile State
+    private val _userProfile = MutableStateFlow<UserProfile?>(null)
+    val userProfile: StateFlow<UserProfile?> = _userProfile.asStateFlow()
+
+    init {
+        loadUserProfile()
+    }
+
+    fun loadUserProfile() {
+        val completed = prefs.getBoolean("profile_completed", false)
+        if (completed) {
+            _userProfile.value = UserProfile(
+                name = prefs.getString("profile_name", "") ?: "",
+                phone = prefs.getString("profile_phone", "") ?: "",
+                email = prefs.getString("profile_email", "") ?: "",
+                birthDate = prefs.getString("profile_birth_date", "") ?: "",
+                imageUri = prefs.getString("profile_image_uri", null)
+            )
+        } else {
+            _userProfile.value = null
+        }
+    }
+
+    fun saveUserProfile(name: String, phone: String, email: String, birthDate: String, imageUri: String?) {
+        prefs.edit().apply {
+            putString("profile_name", name)
+            putString("profile_phone", phone)
+            putString("profile_email", email)
+            putString("profile_birth_date", birthDate)
+            putString("profile_image_uri", imageUri)
+            putBoolean("profile_completed", true)
+            apply()
+        }
+        _userProfile.value = UserProfile(name, phone, email, birthDate, imageUri)
+    }
+
+    fun clearUserProfile() {
+        prefs.edit().apply {
+            clear()
+            apply()
+        }
+        _userProfile.value = null
     }
 
     // Raw sources from DB
@@ -173,11 +229,14 @@ enum class Screen {
     Accueil, Transactions, Dettes, Statistiques
 }
 
-class FinanceViewModelFactory(private val repository: FinanceRepository) : ViewModelProvider.Factory {
+class FinanceViewModelFactory(
+    private val repository: FinanceRepository,
+    private val prefs: SharedPreferences
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FinanceViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return FinanceViewModel(repository) as T
+            return FinanceViewModel(repository, prefs) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
