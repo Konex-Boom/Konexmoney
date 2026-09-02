@@ -22,3 +22,7 @@ Application Android de gestion de finances personnelles et de dettes intelligent
 1. Ouvrir le projet dans **Android Studio**
 2. Supprimer la ligne `signingConfig = signingConfigs.getByName("debugConfig")` du fichier `build.gradle.kts` de l'app
 3. Lancer l'application sur un émulateur ou un appareil physique
+
+## Tester l'application
+
+Télécharger l'APK de test ici : [Télécharger l'APK](https://drive.google.com/file/d/1x9gvonaY8rlYpK-KsbhZihi6f8y4-y8o/view?usp=sharing)
