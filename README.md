@@ -1,21 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# KonexMoney
 
-# Run and deploy your AI Studio app
+Application Android de gestion de finances personnelles et de dettes intelligentes, conçue pour la devise Ariary (Ar).
 
-This contains everything you need to run your app locally.
+## Fonctionnalités
 
-View your app in AI Studio: https://ai.studio/apps/3cf6c81c-0b8a-4567-88eb-18e5c7accc73
+- **Tableau de bord** — Vue d'ensemble du solde actuel, des entrées et sorties du mois en cours, avec des alertes intelligentes pour les remboursements possibles.
+- **Transactions** — Enregistrement des entrées (revenus) et sorties (dépenses) avec catégories (Salaire, Alimentation, Transport, Loisirs, Santé, etc.), modes de paiement (Espèces, Mobile Money, Carte, Virement), et filtres avancés par type, catégorie et période.
+- **Dettes** — Suivi des dettes actives et réglées : créances (« On me doit ») et emprunts (« Je dois »), avec gestion des échéances, reports et motifs.
+- **Statistiques** — Analyse des tendances financières.
+- **Onboarding** — Création de profil utilisateur avec photo, téléphone, email et date de naissance.
+- **Intelligence artificielle** — Suggestions et alertes basées sur l'API Gemini pour optimiser la gestion financière.
 
-## Run Locally
+## Technologies
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+- Kotlin / Jetpack Compose
+- Room (base de données locale)
+- Firebase AI (Gemini)
+- Architecture MVVM
+- Min SDK : 24 (Android 7.0+)
 
+## Mise en route
 
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+1. Ouvrir le projet dans **Android Studio**
+2. Créer un fichier `.env` à la racine du projet avec votre clé API Gemini :
+   ```
+   GEMINI_API_KEY=votre_cle_api
+   ```
+   (voir `.env.example` pour un exemple)
+3. Supprimer la ligne `signingConfig = signingConfigs.getByName("debugConfig")` du fichier `build.gradle.kts` de l'app
+4. Lancer l'application sur un émulateur ou un appareil physique
